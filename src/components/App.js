@@ -1,76 +1,54 @@
-import React from "react";
-import ReactDOM from "react-dom";
+// App.js
+
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Routes,
+  Redirect,
   Link,
-  Navigate,
 } from "react-router-dom";
-import PrivateRoute from "./PrivateRoute"; // Ensure this is correctly implemented
-
+import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
-import Home from "./Home";
-import NotFound from "./NotFound";
+import CodePlayground from "./CodePlayground";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoggedIn: false,
-    };
-    this.isLoggedIn = this.isLoggedIn.bind(this);
-    this.login = this.login.bind(this);
-  }
+const App = () => {
+  const [authenticated, setAuthenticated] = useState(false);
 
-  isLoggedIn() {
-    return this.state.isLoggedIn;
-  }
+  const login = () => {
+    setAuthenticated(true);
+  };
 
-  login() {
-    this.setState({ isLoggedIn: !this.state.isLoggedIn });
-  }
+  const logout = () => {
+    setAuthenticated(false);
+  };
 
-  render() {
-    return (
-      <Router>
-        <div className={"main-container"}>
-          <div>
-            {this.state.isLoggedIn
-              ? "Logged in, Now you can enter Playground"
-              : "You are not authenticated, Please login first"}
-          </div>
-          <div>
-            <ul>
-              {this.state.isLoggedIn && (
-                <li>
-                  <Link to="/home">PlayGround</Link>
-                </li>
-              )}
-              <li>
-                <Link to="/login">Login</Link>
-              </li>
-            </ul>
-          </div>
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <Login login={this.login} isLogged={this.state.isLoggedIn} />
-              }
-            />
-            <Route
-              path="/home"
-              element={
-                this.state.isLoggedIn ? <Home /> : <Navigate to="/login" />
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </Router>
-    );
-  }
-}
+  return (
+    <Router>
+      <div className="main-container">
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/codeplayground">Code Playground</Link>
+            </li>
+          </ul>
+          <p>User is {authenticated ? "authenticated" : "not authenticated"}</p>
+          <button onClick={logout}>Logout</button>
+        </nav>
+        <Route path="/login" render={() => <Login login={login} />} />
+        <PrivateRoute
+          path="/codeplayground"
+          component={CodePlayground}
+          authenticated={authenticated}
+        />
+      </div>
+    </Router>
+  );
+};
 
 export default App;
