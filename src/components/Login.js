@@ -1,16 +1,14 @@
-import React, { useContext } from "react";
-import authContext from "../context/authContext";
+import React from "react";
 
-const Login = () => {
-  const { isLoggedIn, setLoggedIn } = useContext(authContext);
-  return (
-    <div>
-      <p>Login</p>
-      <button onClick={() => setLoggedIn(!isLoggedIn)}>
-        {isLoggedIn ? "Log Out" : "Log In"}
-      </button>
-    </div>
-  );
-};
-
-export default Login;
+export default class Login extends React.Component {
+  render() {
+    return (
+      <div>
+        <p>Login</p>
+        <button onClick={this.props.login}>
+          {!this.props.isLogged ? "Log In" : "Log Out"}
+        </button>
+      </div>
+    );
+  }
+}
