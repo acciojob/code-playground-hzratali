@@ -3,33 +3,15 @@ import ReactDOM from "react-dom";
 import {
   BrowserRouter as Router,
   Route,
-  Switch,
+  Routes,
   Link,
-  Redirect,
+  Navigate,
 } from "react-router-dom";
+import PrivateRoute from "./PrivateRoute"; // Ensure this is correctly implemented
 
 import Login from "./Login";
 import Home from "./Home";
 import NotFound from "./NotFound";
-
-// Custom PrivateRoute component
-const PrivateRoute = ({
-  component: Component,
-  isAuthenticated,
-  redirect,
-  ...rest
-}) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      isAuthenticated === true ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={redirect} />
-      )
-    }
-  />
-);
 
 class App extends React.Component {
   constructor(props) {
@@ -37,7 +19,12 @@ class App extends React.Component {
     this.state = {
       isLoggedIn: false,
     };
+    this.isLoggedIn = this.isLoggedIn.bind(this);
     this.login = this.login.bind(this);
+  }
+
+  isLoggedIn() {
+    return this.state.isLoggedIn;
   }
 
   login() {
@@ -45,41 +32,41 @@ class App extends React.Component {
   }
 
   render() {
-    const { isLoggedIn } = this.state;
     return (
       <Router>
-        <div className="main-container">
+        <div className={"main-container"}>
           <div>
-            {isLoggedIn
+            {this.state.isLoggedIn
               ? "Logged in, Now you can enter Playground"
               : "You are not authenticated, Please login first"}
           </div>
           <div>
             <ul>
-              <li>
-                <Link to="/home">PlayGround</Link>
-              </li>
+              {this.state.isLoggedIn && (
+                <li>
+                  <Link to="/home">PlayGround</Link>
+                </li>
+              )}
               <li>
                 <Link to="/login">Login</Link>
               </li>
             </ul>
           </div>
-          <Switch>
+          <Routes>
             <Route
               path="/login"
-              render={(props) => (
-                <Login {...props} login={this.login} isLogged={isLoggedIn} />
-              )}
+              element={
+                <Login login={this.login} isLogged={this.state.isLoggedIn} />
+              }
             />
-            <PrivateRoute
-              exact
+            <Route
               path="/home"
-              component={Home}
-              isAuthenticated={isLoggedIn}
-              redirect="/login"
+              element={
+                this.state.isLoggedIn ? <Home /> : <Navigate to="/login" />
+              }
             />
-            <Route component={NotFound} />
-          </Switch>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </div>
       </Router>
     );
