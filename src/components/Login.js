@@ -1,18 +1,14 @@
-// Login.js
-
 import React from "react";
 
-const Login = ({ login }) => {
-  const handleLogin = () => {
-    login();
-  };
-
-  return (
-    <div>
-      <h2>Login Page</h2>
-      <button onClick={handleLogin}>Login</button>
-    </div>
-  );
-};
-
-export default Login;
+export default class Login extends React.Component {
+  render() {
+    return (
+      <div>
+        <p>Login</p>
+        <button onClick={this.props.login}>
+          {!this.props.isLogged ? "Log In" : "Log Out"}
+        </button>
+      </div>
+    );
+  }
+}
