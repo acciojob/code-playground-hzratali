@@ -1,12 +1,7 @@
 // App.js
 
 import React, { useState } from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"; // Import Routes
 import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
 import CodePlayground from "./CodePlayground";
@@ -40,12 +35,19 @@ const App = () => {
           <p>User is {authenticated ? "authenticated" : "not authenticated"}</p>
           <button onClick={logout}>Logout</button>
         </nav>
-        <Route path="/login" render={() => <Login login={login} />} />
-        <PrivateRoute
-          path="/codeplayground"
-          component={CodePlayground}
-          authenticated={authenticated}
-        />
+        <Routes>
+          {" "}
+          {/* Replace BrowserRouter with Routes */}
+          <Route path="/login" element={<Login login={login} />} />{" "}
+          {/* Use element prop */}
+          <PrivateRoute
+            path="/codeplayground"
+            element={<CodePlayground />}
+            authenticated={authenticated}
+          />{" "}
+          {/* Use element prop */}
+        </Routes>{" "}
+        {/* Close Routes */}
       </div>
     </Router>
   );
