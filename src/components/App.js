@@ -7,7 +7,6 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import { Redirect, Switch } from "react-router-dom";
 
 import Login from "./Login";
 import Home from "./Home";
